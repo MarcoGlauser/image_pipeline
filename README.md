@@ -11,58 +11,14 @@ for web publishing.
 
 
 ## Configuration Options
-### Multiprocessing
-Turn multiprocessing on or off
-```yaml
-multiprocessing:
-  active: true|false
-  processes: 4
-```
-### Mozjpeg
-configure the use of the mozjpeg library for jpeg compression
-```yaml
-mozjpeg:
-  path: /opt/mozjpeg/bin/
-  active: true
-```
-
-### Directory
-```yaml
-path: 'example-data'
-output: OutputDirectory
-```
-
-### Output Directory
-If `fileFormat` is empty, the pipeline try to output it in the same 
-format. 
-
-```yaml
-fileFormat: 'JPEG'|'PNG'|'WEBP'
-path: 'example-data/output'
-prefix: ''
-formats: [OutputFormat]
-```
-
-
-### Output Format
-Quality is only respected for JPEG compression. If quality is set to
-null, image-pipeline will try to use lossless compression for JPEG.
-Default quality is 80, if not specified.
-```yaml
-name: 'asdf'
-width: 200
-height: 200
-quality: 80 | null
-```
-
 
 ### Example
 This configuration will take all pictures from the folder exmaple-data
 and create 3 variants for each picture. `example-data/test.jpeg` will
-become 
-`example-data/output/test-small.jpeg`, 
+become
+`example-data/output/test-small.jpeg`,
 `example-data/output/test-medium.jpeg` and
-`example-data/output/test-large.jpeg` 
+`example-data/output/test-large.jpeg`
 with the correct resolution. It will make use of multiprocessing and
 the mozjpeg library to achieve the best result.
 
@@ -91,8 +47,52 @@ directories:
           quality: 80
 ```
 
+### Multiprocessing
+Turn multiprocessing on or off
+```yaml
+multiprocessing:
+  active: true|false
+  processes: 4
+```
+### Mozjpeg
+configure the use of the mozjpeg library for jpeg compression
+```yaml
+mozjpeg:
+  path: /opt/mozjpeg/bin/
+  active: true
+```
+
+### Directory
+```yaml
+path: 'example-data'
+output: OutputDirectory
+```
+
+### Output Directory
+If `fileFormat` is empty, the pipeline try to output it in the same
+format.
+
+```yaml
+fileFormat: 'JPEG'|'PNG'|'WEBP'
+path: 'example-data/output'
+prefix: ''
+formats: [OutputFormat]
+```
+
+
+### Output Format
+Quality is only respected for JPEG compression. If quality is set to
+null, image-pipeline will try to use lossless compression for JPEG.
+Default quality is 80, if not specified.
+```yaml
+name: 'asdf'
+width: 200
+height: 200
+quality: 80 | null
+```
+
+
 # Todo
-* CLI
 * Caching
 * Dockerfile
 * PNG optimization
