@@ -1,11 +1,15 @@
+#!/usr/bin/env python3
 import time
+
+import click
 
 from image_pipeline.configuration import ConfigurationLoader
 from image_pipeline.task_executor import TaskExecutor
 
 
-def main():
-    configuration_filename = "example.yaml"
+@click.command()
+@click.argument('configuration_filename', default='image_pipeline.yaml', type=click.Path(exists=True))
+def main(configuration_filename):
     configuration = ConfigurationLoader.load_configuration(configuration_filename)
     task_executor = TaskExecutor(configuration)
 
