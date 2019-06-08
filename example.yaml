@@ -22,19 +22,3 @@ directories:
           width: 1000
           height: 1000
           quality: 80
-  - name: "example-data"
-    recursive: false
-    output:
-      fileFormat: 'WEBP'
-      path: "example-data/output"
-      placeholder: true
-      removeMetadata: true
-      prefix: ''
-      formats:
-        - name: sm
-          width: 100
-        - name: md
-          width: 300
-        - name: lg
-          width: 1000
-          height: 1000

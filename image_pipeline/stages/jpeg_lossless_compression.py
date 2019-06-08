@@ -1,15 +1,20 @@
 import os
 import subprocess
 
+from image_pipeline.configuration import Configuration, OutputFormat
 from image_pipeline.stages.stage import Stage
 
 
 class JPEGLossLessCompressionStage(Stage):
-    def is_required(self) -> bool:
-        return self.configuration.mozjpeg.active and self.output_format.quality is None
+
+    image_format = 'JPEG'
+
+    @classmethod
+    def is_required(cls, image_data: bytes, configuration: Configuration, output_format: OutputFormat) -> bool:
+        return configuration.mozjpeg.active and output_format.quality is None
 
     def run_stage(self) -> bytes:
-        return self._mozjpeg_compression(self.image_wrapper.raw)
+        return self._mozjpeg_compression(self.image_data)
 
     def _mozjpeg_compression(self, image: bytes):
         command = (
@@ -21,7 +26,3 @@ class JPEGLossLessCompressionStage(Stage):
             print(stderr)
             raise Exception()
         return stdout
-
-    @staticmethod
-    def image_format():
-        return 'JPEG'

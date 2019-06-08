@@ -40,9 +40,7 @@ class ImageWrapper:
 
     @property
     def raw(self) -> bytes:
-        buffered = io.BytesIO()
-        self.image.save(buffered, format=self.format)
-        return buffered.getvalue()
+        return self._bytes
 
     @raw.setter
     def raw(self, data: bytes):
@@ -59,9 +57,9 @@ class ImageHelper:
         return bytestream.getvalue()
 
     @staticmethod
-    def from_bytes(data: bytes):
+    def from_bytes(data: bytes) -> Image.Image:
         return Image.open(io.BytesIO(data))
 
     @staticmethod
-    def from_filename(path: str):
+    def from_filename(path: str) -> Image.Image:
         return Image.open(path)

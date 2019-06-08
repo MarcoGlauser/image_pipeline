@@ -1,19 +1,24 @@
 import os
 
+from image_pipeline.configuration import Configuration, OutputFormat
 from image_pipeline.image_wrapper import ImageHelper
 from image_pipeline.stages.stage import Stage
 import subprocess
 
 
 class JPEGLossyCompressionStage(Stage):
-    def is_required(self) -> bool:
-        return self.output_format.quality is not None
+
+    image_format = 'JPEG'
+
+    @classmethod
+    def is_required(cls, image_data: bytes, configuration: Configuration, output_format: OutputFormat) -> bool:
+        return output_format.quality is not None
 
     def run_stage(self) -> bytes:
         if self.configuration.mozjpeg.active:
-            return self._mozjpeg_compression(self.image_wrapper.raw)
+            return self._mozjpeg_compression(self.image_data)
         else:
-            image = self.image_wrapper.image
+            image = self.image
             return ImageHelper.to_bytes(image, quality=self.output_format.quality, optimize=True, format='JPEG')
 
     def _mozjpeg_compression(self, image: bytes):
@@ -28,6 +33,3 @@ class JPEGLossyCompressionStage(Stage):
             raise Exception()
         return stdout
 
-    @staticmethod
-    def image_format():
-        return 'JPEG'

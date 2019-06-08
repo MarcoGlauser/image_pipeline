@@ -1,14 +1,19 @@
 from image_pipeline.configuration import OutputFormat, Configuration
-from image_pipeline.image_wrapper import ImageWrapper
+from image_pipeline.image_wrapper import ImageHelper
 
 
 class Stage:
-    def __init__(self, image_wrapper: ImageWrapper, configuration: Configuration, output_format: OutputFormat):
-        self.image_wrapper = image_wrapper
+
+    image_format = NotImplementedError()
+
+    def __init__(self, image_data: bytes, configuration: Configuration, output_format: OutputFormat):
+        self.image_data = image_data
+        self.image = ImageHelper.from_bytes(image_data)
         self.output_format = output_format
         self.configuration = configuration
 
-    def is_required(self) -> bool:
+    @classmethod
+    def is_required(cls, image_data: bytes, configuration: Configuration, output_format: OutputFormat) -> bool:
         raise NotImplementedError()
 
     def run_stage(self) -> bytes:
@@ -17,6 +22,3 @@ class Stage:
     def image_from_bytes(self):
         pass
 
-    @staticmethod
-    def image_format():
-        raise NotImplementedError()

@@ -20,9 +20,8 @@ class Task:
 
     def run_task(self):
             self.prepare_task()
-
-            self._run_stages(pre_stages)
-            self._run_stages(self._get_compression_stages())
+            self._run_stages(pre_stages, keep_result=True)
+            self._run_stages(self._get_compression_stages(), keep_result=True)
             self._save_result()
             self._run_stages(post_stages)
 
@@ -31,21 +30,21 @@ class Task:
             file_format = self.image_wrapper.original_format
         else:
             file_format = self.output_configuration.file_format
-        return [stage for stage in compression_stages if stage.image_format() == file_format]
+        return [stage for stage in compression_stages if stage.image_format == file_format]
 
-    def _run_stages(self, stages: Iterator[type(Stage)]):
+    def _run_stages(self, stages: Iterator[type(Stage)], keep_result=False):
         for stage_class in stages:
-            stage = stage_class(self.image_wrapper, self.configuration, self.output_format)
-            if stage.is_required():
-
-                if self.image_wrapper.format != stage.image_format():
+            if stage_class.is_required(self.image_wrapper.raw, self.configuration, self.output_format):
+                if self.image_wrapper.format != stage_class.image_format:
                     print('Conversion Required from {input} to {output}'.format(
                         input=self.image_wrapper.format,
-                        output=stage.image_format()))
-                    self.image_wrapper.convert_to(stage.image_format())
-
+                        output=stage_class.image_format))
+                    self.image_wrapper.convert_to(stage_class.image_format)
+                stage = stage_class(self.image_wrapper.raw, self.configuration, self.output_format)
                 print(stage_class.__name__, self.output_format.name)
-                self.image_wrapper.raw = stage.run_stage()
+                stage_result = stage.run_stage()
+                if keep_result:
+                    self.image_wrapper.raw = stage_result
         print()
 
     def _save_result(self):
