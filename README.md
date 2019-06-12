@@ -10,6 +10,22 @@ for web publishing.
 * Conversion between formats (including WebP)
 
 
+## Usage
+```sh
+> image_pipeline --help
+> Usage: image_pipeline [OPTIONS] [CONFIGURATION_FILENAME]
+
+  Options:
+    --help  Show this message and exit.
+```
+Examples:
+```sh
+# if your configuration file is named image_pipeline.yaml
+image_pipeline
+
+# otherwise pass the name
+image_pipeline example_configuration.yaml
+```
 ## Configuration Options
 
 ### Example

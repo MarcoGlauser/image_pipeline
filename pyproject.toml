@@ -14,7 +14,7 @@ click = "*"
 pytest = "^3.0"
 
 [tool.poetry.scripts]
-image_pipeline = 'image_pipeline:main.main'
+image_pipeline = 'image_pipeline.main:main'
 
 [build-system]
 requires = ["poetry>=0.12"]
