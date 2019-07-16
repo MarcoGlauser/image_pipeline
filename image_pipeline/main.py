@@ -21,7 +21,13 @@ def main(configuration_filename):
 
 if __name__ == '__main__':
     start = time.time()
-    main()
+    try:
+        main()
+    except SystemExit as e:
+        if e.code == 0:
+            pass
+        else:
+            raise e
     end = time.time()
     elapsed = end - start
     print(f'pipeline took {elapsed} seconds')
