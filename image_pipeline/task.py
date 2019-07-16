@@ -68,8 +68,3 @@ class Task:
                     output=self.output_configuration.file_format))
                 self.image_wrapper.convert_to(self.output_configuration.file_format)
 
-    @classmethod
-    def create_from_source_directory(cls, configuration: Configuration, source_directory: SourceDirectory):
-        for source_image in source_directory.search_source_files():
-            for output_format in source_directory.output_configuration.output_formats:
-                yield cls(source_image, configuration, source_directory.output_configuration, output_format)
