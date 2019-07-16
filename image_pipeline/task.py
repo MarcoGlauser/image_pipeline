@@ -1,7 +1,7 @@
 import os
 from typing import Iterator
 
-from image_pipeline.configuration import OutputConfiguration, OutputFormat, Configuration
+from image_pipeline.configuration import OutputConfiguration, OutputFormat, Configuration, SourceDirectory
 from image_pipeline.image_wrapper import ImageWrapper
 from image_pipeline.stages import pre_stages, compression_stages, post_stages
 from image_pipeline.stages.stage import Stage
@@ -19,11 +19,11 @@ class Task:
         self.image_wrapper = ImageWrapper(self.filename)
 
     def run_task(self):
-            self.prepare_task()
-            self._run_stages(pre_stages, keep_result=True)
-            self._run_stages(self._get_compression_stages(), keep_result=True)
-            self._save_result()
-            self._run_stages(post_stages)
+        self.prepare_task()
+        self._run_stages(pre_stages, keep_result=True)
+        self._run_stages(self._get_compression_stages(), keep_result=True)
+        self._save_result()
+        self._run_stages(post_stages)
 
     def _get_compression_stages(self) -> Iterator[type(Stage)]:
         if self.output_configuration.file_format is None:
@@ -67,3 +67,9 @@ class Task:
                     input=self.image_wrapper.format,
                     output=self.output_configuration.file_format))
                 self.image_wrapper.convert_to(self.output_configuration.file_format)
+
+    @classmethod
+    def create_from_source_directory(cls, configuration: Configuration, source_directory: SourceDirectory):
+        for source_image in source_directory.search_source_files():
+            for output_format in source_directory.output_configuration.output_formats:
+                yield cls(source_image, configuration, source_directory.output_configuration, output_format)
