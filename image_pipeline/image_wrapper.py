@@ -18,21 +18,31 @@ class ImageWrapper:
         self.original_format = self.image.format
         self.format = self.original_format
 
-    def convert_to(self, image_format: str):
+    def convert_to(self, image_format: str, **kwargs):
+        if image_format != self.format:
+            print(f'Conversion Required from {self.format} to {image_format}')
+            self._convert(image_format, **kwargs)
+
+    def _convert(self, image_format: str, **kwargs):
         if image_format == 'JPEG':
-            self.convert_to_jpeg()
+            self.convert_to_jpeg(**kwargs)
         else:
             buffered = io.BytesIO()
-            self.image.save(buffered, format=image_format)
+            self.image.save(buffered, format=image_format, **kwargs)
             self.raw = buffered.getvalue()
             self.format = image_format
 
-    def convert_to_jpeg(self, quality: int = 95, optimize: bool = False):
+    def convert_to_jpeg(self, quality: int = 95, optimize: bool = False, **kwargs):
         buffered = io.BytesIO()
         rgb_image = self.image.convert('RGB')
-        rgb_image.save(buffered, quality=quality, optimize=optimize, format="JPEG")
+        rgb_image.save(buffered, quality=quality, optimize=optimize, format="JPEG", **kwargs)
         self.raw = buffered.getvalue()
         self.format = 'JPEG'
+
+    def save(self, image_format: str, path: str):
+        self._convert(image_format)
+        with open(path, "wb") as output_file:
+            output_file.write(self.raw)
 
     @property
     def image(self) -> Image.Image:
