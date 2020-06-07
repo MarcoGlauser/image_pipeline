@@ -18,10 +18,7 @@ class ResizeStage(Stage):
 
     def run_stage(self) -> bytes:
         if self.output_format.height is not None and self.output_format.width is not None:
-            if self.image.height > self.image.width:
-                ratio = self.output_format.width / self.image.width
-            else:
-                ratio = self.output_format.height / self.image.height
+                ratio = max(self.output_format.width / self.image.width, self.output_format.height / self.image.height)
         elif self.output_format.height is not None:
             ratio = self.output_format.height / self.image.height
         else:
